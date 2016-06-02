@@ -1,9 +1,9 @@
 # Running ROS launch files on a robot from the cloud with Salt
 
-This little project was meant to test using Saltstack for the orchestration of robotic tasks on robots from the cloud. 
-Rather than developing our own process management framework /  protocol on top of MQTT or whatever communication primitive we will choose to implement a Cloud Robotics PaaS, the idea is to use what's already there and for remote process execution and configuration management.
+This little project was meant to test using Saltstack (https://saltstack.com/) for the orchestration of robotic tasks on robots from the cloud. 
+Rather than developing our own process management framework /  protocol on top of MQTT or whatever communication primitive we will choose to implement a Cloud Robotics PaaS, the idea is to use what's already there for remote process execution and configuration management.
 
-Robots can physically be anywhere and most likely will not be directly addressable (either because NATted or firewalled). Salt lets us get around this asymmetric communication issue by relying on an agent installed on the machines/robots to be controlled (salt-minions) to connect to the ZeroMQ on the salt-master which runs in the cloud.
+Robots can physically be anywhere and most likely will not be directly addressable (either because NATted or firewalled or both). Salt lets us get around this asymmetric communication issue by relying on an agent installed on the machines/robots to be controlled (salt-minions) to connect to the ZeroMQ on the salt-master which runs in the cloud.
 
 In this project you find:
  - the 'salt_master' directory
@@ -41,7 +41,7 @@ On your master, run:
 
     salt-key -F master
 
-Copy the master.pub fingerprint from the Local Keys section, and then set this value as the 'master_finger' in the minion configuration file on the minion. i.e., on your minion, edit the file /etc/salt/minion:
+Copy the master.pub fingerprint from the Local Keys section, and then set this value as the 'master_finger' in the minion configuration file. I.e., on your minion, edit the file /etc/salt/minion:
   - uncomment the line saying '#master: salt' and replace 'salt' with your master (host) IP address
   - edit the line saying 'master_finger' adding the value of the master.pub fingerprint
 
@@ -66,7 +66,7 @@ Done!
 We tested our setup on our turtlebots at the office. The goal for now was just to launch a couple of ROS launch files as background commands remotely. In the future we will probably use the concept of "state" in Salt to schedule different concurrent robotic behaviors on our robots. But for now we just used this:
 
 ### Run minimal
-This uses the salt module for running a task in background, sources a couple of needed files, and runs roslaunch with our ouw specific turtlebot files using a laser scanner. On the master, run:
+This uses the salt module for running a task in background, sources a couple of needed files, and runs roslaunch with our own specific turtlebot files using a laser scanner. On the master, run:
 
     salt turtlebot.robonet cmd.run_bg "source /opt/ros/indigo/setup.bash && source ~/catkin_ws/devel/setup.bash && source ~/turtlebot/devel/setup.bash && export ROS_MASTER_URI=http://turtlebot:11311 && export ROS_HOSTNAME=turtlebot && roslaunch icclab_turtlebot minimal_with_rplidar.launch" runas=turtlebot shell="/bin/bash" cwd="/home/turtlebot"
 
