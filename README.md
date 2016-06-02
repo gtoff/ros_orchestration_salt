@@ -51,10 +51,12 @@ Start (or restart) the salt-minion:
 
 Now we can finally accept the key of the minion on the master. On the master,
 run:
+
     salt-key -L
 
 This will show you the name of your minion and its key as being in the "Unaccepted Keys" state.
 You can accept all keys with:
+
     salt-key -A
 
 Done!
@@ -73,6 +75,6 @@ Basically, we trigger on the target "turtlebot.robonet" (one of our turtlebots) 
 ### Run amcl
 This uses the same setup to run the ROS amcl node (http://wiki.ros.org/amcl) allowing our robots to find themselves and navigate on our lab map:
 
-salt turtlebot.robonet cmd.run_bg "source /opt/ros/indigo/setup.bash && source ~/catkin_ws/devel/setup.bash && source ~/turtlebot/devel/setup.bash && export ROS_MASTER_URI=http://turtlebot:11311 && export ROS_HOSTNAME=turtlebot && roslaunch icclab_turtlebot amcl_icclab.launch map_file:=/home/turtlebot/catkin_ws/src/icclab_turtlebot/icclab_latest_map.yaml" runas=turtlebot shell="/bin/bash" cwd="/home/turtlebot"
+    salt turtlebot.robonet cmd.run_bg "source /opt/ros/indigo/setup.bash && source ~/catkin_ws/devel/setup.bash && source ~/turtlebot/devel/setup.bash && export ROS_MASTER_URI=http://turtlebot:11311 && export ROS_HOSTNAME=turtlebot && roslaunch icclab_turtlebot amcl_icclab.launch map_file:=/home/turtlebot/catkin_ws/src/icclab_turtlebot/icclab_latest_map.yaml" runas=turtlebot shell="/bin/bash" cwd="/home/turtlebot"
 
 
